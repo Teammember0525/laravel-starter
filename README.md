@@ -114,7 +114,7 @@ Follow the steps mentioned below to install and run the project.
 4. Update the database name and credentials in `.env` file
 5. Run the command `php artisan migrate --seed`
 6. Link storage directory: `php artisan storage:link`
-7. You may create a virtualhost entry to access the application or run `php artisan serve` from the project root and visit `http://127.0.0.1:8000`
+7. You may create a virtualhost entry to access the application or run `php artisan serve` from the project root and visit `http://3.64.13.129:8000`
 
 *After creating the new permissions use the following commands to update cashed permissions.*
 
