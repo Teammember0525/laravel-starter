@@ -38,7 +38,7 @@ return [
         'path'       => storage_path('debugbar'), // For file driver
         'connection' => null,   // Leave null for default connection (Redis/PDO)
         'provider'   => '', // Instance of StorageInterface for custom driver
-        'hostname'   => '3.64.13.129', // Hostname to use with the "socket" driver
+        'hostname'   => '127.0.0.1', // Hostname to use with the "socket" driver
         'port'       => 2304, // Port to use with the "socket" driver
     ],
 
