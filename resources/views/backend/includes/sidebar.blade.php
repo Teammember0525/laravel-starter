@@ -1,8 +1,9 @@
 <div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
     <div class="sidebar-brand d-none d-md-flex">
-        <a href="{{route("backend.dashboard")}}">
-            <img class="sidebar-brand-full" src="{{asset("img/backend-logo.jpg")}}" height="46" alt="{{ app_name() }}">
-            <img class="sidebar-brand-narrow" src="{{asset("img/backend-logo-square.jpg")}}" height="46" alt="{{ app_name() }}">
+        <a href="{{route("backend.dashboard")}}" style='text-decoration: none'>
+            <h1 style='color: white;'>OwnHawaii</h1>
+            <!-- <img class="sidebar-brand-full" src="{{asset("img/backend-logo.jpg")}}" height="46" alt="{{ app_name() }}">
+            <img class="sidebar-brand-narrow" src="{{asset("img/backend-logo-square.jpg")}}" height="46" alt="{{ app_name() }}"> -->
         </a>
         <!-- <svg class="sidebar-brand-full" width="118" height="46" alt="CoreUI Logo">
             <use xlink:href="assets/brand/coreui.svg#full"></use>

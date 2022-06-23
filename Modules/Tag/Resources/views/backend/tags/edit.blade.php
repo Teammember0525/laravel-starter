@@ -18,11 +18,12 @@
             <i class="{{ $module_icon }}"></i> {{ __($module_title) }} <small class="text-muted">{{ __($module_action) }}</small>
 
             <x-slot name="subtitle">
-                @lang(":module_name Management Dashboard", ['module_name'=>Str::title($module_name)])
+                @lang("Announcement Management Dashboard")
             </x-slot>
             <x-slot name="toolbar">
                 <x-buttons.return-back />
-                <x-buttons.show route='{!!route("backend.$module_name.show", $$module_name_singular)!!}' title="{{__('Show')}} {{ ucwords(Str::singular($module_name)) }}" class="ms-1" />
+                <!-- <x-buttons.show route='{!!route("backend.$module_name.show", $$module_name_singular)!!}' title="{{__('Show')}} {{ ucwords(Str::singular($module_name)) }}" class="ms-1" /> -->
+                <x-buttons.show route='{!!route("frontend.$module_name.show", [encode_id($$module_name_singular->id), $$module_name_singular->slug])!!}' title="Public View" class="ms-1" />
             </x-slot>
         </x-backend.section-header>
 
@@ -30,9 +31,9 @@
 
         <div class="row mt-4">
             <div class="col">
-                {{ html()->modelForm($$module_name_singular, 'PATCH', route("backend.$module_name.update", $$module_name_singular))->acceptsFiles()->class('form')->open() }}
+                {{ html()->modelForm($$module_name_singular, 'PATCH', route("backend.$module_name.update", $$module_name_singular))->class('form')->open() }}
 
-                @include ("$module_path.$module_name.form")
+                @include ("tag::backend.$module_name.form")
 
                 <div class="row">
                     <div class="col-4">
@@ -40,7 +41,6 @@
                             {{ html()->submit($text = icon('fas fa-save')." Save")->class('btn btn-success') }}
                         </div>
                     </div>
-                    {{ html()->form()->close() }}
 
                     <div class="col-8">
                         <div class="float-end">
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                 </div>
-
+                {{ html()->form()->close() }}
             </div>
         </div>
     </div>

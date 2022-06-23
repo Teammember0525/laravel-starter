@@ -18,11 +18,15 @@
             <i class="{{ $module_icon }}"></i> {{ __($module_title) }} <small class="text-muted">{{ __($module_action) }}</small>
 
             <x-slot name="subtitle">
-                @lang(":module_name Management Dashboard", ['module_name'=>Str::title($module_name)])
+                <!-- @lang(":module_name Management Dashboard", ['module_name'=>Str::title($module_name)]) -->
+                @lang("City Management Dashboard")
             </x-slot>
             <x-slot name="toolbar">
                 <x-buttons.return-back />
-                <x-buttons.show route='{!!route("backend.$module_name.show", $$module_name_singular)!!}' title="{{__('Show')}} {{ ucwords(Str::singular($module_name)) }}" class="ms-1" />
+                <x-buttons.show route='{!!route("frontend.$module_name.show", [encode_id($$module_name_singular->id), $$module_name_singular->slug])!!}' title="Public View" class="ms-1" />
+                <!-- <div class="text-center">
+                    <a href="{{route("frontend.$module_name.show", [encode_id($$module_name_singular->id), $$module_name_singular->slug])}}" class="btn btn-success" target="_blank"><i class="fas fa-link"></i> Public View</a>
+                </div> -->
             </x-slot>
         </x-backend.section-header>
 

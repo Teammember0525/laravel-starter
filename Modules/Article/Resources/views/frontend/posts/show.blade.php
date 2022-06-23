@@ -8,14 +8,21 @@
     <div class="container mx-auto flex px-5 py-8 sm:py-16 md:flex-row flex-col items-center">
         <div class="lg:flex-grow sm:w-4/12 lg:pr-24 md:pr-16 flex flex-col md:items-start md:text-left mb-16 md:mb-0 items-center text-center">
             <h1 class="sm:text-4xl text-3xl mb-4 font-medium text-gray-800">
-                {{$$module_name_singular->name}}
+                OH-{{$$module_name_singular->name}}
             </h1>
-            @if($$module_name_singular->intro != "")
-            <p class="mb-8 leading-relaxed">
-                {{$$module_name_singular->intro}}
+            @if($$module_name_singular->slug != "")
+            <p class="mb-2 leading-relaxed">
+            Price : {{$$module_name_singular->slug}}
             </p>
             @endif
-
+            @if($$module_name_singular->intro != "")
+            <p class="mb-2 leading-relaxed">
+            Est. payment : {{$$module_name_singular->intro}}
+            </p>
+            @endif
+            <p class="mb-2 leading-relaxed">
+            {{$$module_name_singular->meta_title}} | {{$$module_name_singular->meta_keywords}} | {{$$module_name_singular->meta_description}}
+            </p>
             @include('frontend.includes.messages')
         </div>
         <div class="sm:w-8/12">
@@ -49,7 +56,7 @@
             <div class="flex flex-row justify-between content-center items-center py-5">
                 <p>
                     <span class="font-weight-bold">
-                        @lang('Category'):
+                        @lang('City'):
                     </span>
 
                     <a href="{{route('frontend.categories.show', [encode_id($$module_name_singular->category_id), $$module_name_singular->category->slug])}}" class="m-2 p-2 bg-gray-100 rounded border-transparent border hover:border-gray-800 transition ease-out duration-300">{{$$module_name_singular->category_name}}</a>
@@ -68,7 +75,7 @@
                 @endif
             </div>
 
-            <div class="py-5">
+            <!-- <div class="py-5">
                 <div class="flex flex-row justify-around content-center items-center ">
                     <h6 class="">Share with others</h6>
 
@@ -88,18 +95,18 @@
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="py-5">
+            <!-- <div class="py-5">
                 @include('article::frontend.posts.blocks.comments')
-            </div>
+            </div> -->
         </div>
 
-        <div class="flex flex-col sm:w-4/12">
+        <!-- <div class="flex flex-col sm:w-4/12">
             <div class="py-5 sm:pt-0">
                 <livewire:recent-posts />
             </div>
-        </div>
+        </div> -->
     </div>
 </section>
 

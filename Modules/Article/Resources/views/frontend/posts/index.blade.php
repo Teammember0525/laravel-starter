@@ -8,10 +8,10 @@
     <div class="container mx-auto flex px-5 items-center justify-center flex-col">
         <div class="text-center lg:w-2/3 w-full">
             <h1 class="text-3xl sm:text-4xl mb-4 font-medium text-gray-800">
-                {{ __("Articles") }}
+                {{ __("Addresses") }}
             </h1>
             <p class="mb-8 leading-relaxed">
-                We publish articles on a number of topics.
+                Here you can see many homes from different cities.
                 <br>
                 We encourage you to read our posts and let us know your feedback. It would be really help us to move forward.
             </p>
@@ -48,7 +48,7 @@
                             </a>'!!}
                         </div>
                         <p class="flex-1 h-full mb-3 font-normal text-gray-700 dark:text-gray-400">
-                            {{$$module_name_singular->intro}}
+                            {{$$module_name_singular->slug}}
                         </p>
                         <p>
                             <a href="{{route('frontend.categories.show', [encode_id($$module_name_singular->category_id), $$module_name_singular->category->slug])}}" class="bg-blue-100 hover:bg-blue-200 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800 dark:hover:bg-blue-300">{{$$module_name_singular->category_name}}</a>

@@ -14,7 +14,7 @@ class TagsController extends BackendBaseController
     public function __construct()
     {
         // Page Title
-        $this->module_title = 'Tags';
+        $this->module_title = 'Announcement';
 
         // module name
         $this->module_name = 'tags';

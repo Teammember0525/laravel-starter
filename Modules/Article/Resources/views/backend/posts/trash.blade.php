@@ -33,10 +33,10 @@
                                 #
                             </th>
                             <th>
-                                Name
+                                Address
                             </th>
                             <th>
-                                Page
+                                City
                             </th>
                             <th>
                                 Updated At

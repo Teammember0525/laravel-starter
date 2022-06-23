@@ -16,7 +16,7 @@
             <i class="{{ $module_icon }}"></i> {{ __($module_title) }} <small class="text-muted">{{ __($module_action) }}</small>
 
             <x-slot name="subtitle">
-                @lang(":module_name Management Dashboard", ['module_name'=>Str::title($module_name)])
+                @lang("Announcement Management Dashboard")
             </x-slot>
             <x-slot name="toolbar">
                 @can('add_'.$module_name)
@@ -52,7 +52,7 @@
                                 #
                             </th>
                             <th>
-                                Name
+                                Announcement
                             </th>
                             <th>
                                 Code

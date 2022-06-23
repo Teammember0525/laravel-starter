@@ -3,7 +3,7 @@
         <div class="form-group">
             <?php
             $field_name = 'name';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Address");
             $field_placeholder = $field_lable;
             $required = "required";
             ?>
@@ -16,7 +16,7 @@
         <div class="form-group">
             <?php
             $field_name = 'slug';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Price");
             $field_placeholder = $field_lable;
             $required = "";
             ?>
@@ -25,7 +25,7 @@
         </div>
     </div>
 
-    <div class="col-4">
+    <!-- <div class="col-4">
         <div class="form-group">
             <?php
             $field_name = 'created_by_alias';
@@ -36,14 +36,14 @@
             {{ html()->label($field_lable, $field_name) }} {!! fielf_required($required) !!}
             {{ html()->text($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
-    </div>
+    </div> -->
 </div>
 <div class="row mb-3">
     <div class="col-12">
         <div class="form-group">
             <?php
             $field_name = 'intro';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Est. payment");
             $field_placeholder = $field_lable;
             $required = "required";
             ?>
@@ -57,7 +57,7 @@
         <div class="form-group">
             <?php
             $field_name = 'content';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Overview");
             $field_placeholder = $field_lable;
             $required = "required";
             ?>
@@ -71,7 +71,7 @@
         <div class="form-group">
             <?php
             $field_name = 'featured_image';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Featured image");
             $field_placeholder = $field_lable;
             $required = "required";
             ?>
@@ -90,7 +90,7 @@
         <div class="form-group">
             <?php
             $field_name = 'category_id';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Country");
             $field_relation = "category";
             $field_placeholder = __("Select an option");
             $required = "required";
@@ -103,13 +103,13 @@
         <div class="form-group">
             <?php
             $field_name = 'type';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Type");
             $field_placeholder = __("Select an option");
             $required = "required";
             $select_options = [
-                'Article' => 'Article',
-                'Feature' => 'Feature',
-                'News' => 'News',
+                'Article' => 'For Sale',
+                'Feature' => 'For Rent',
+                'News' => 'Sold',
             ];
             ?>
             {{ html()->label($field_lable, $field_name) }} {!! fielf_required($required) !!}
@@ -120,7 +120,7 @@
         <div class="form-group">
             <?php
             $field_name = 'is_featured';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Is active?");
             $field_placeholder = __("Select an option");
             $required = "required";
             $select_options = [
@@ -133,7 +133,7 @@
         </div>
     </div>
 </div>
-<div class="row mb-3">
+<!-- <div class="row mb-3">
     <div class="col">
         <div class="form-group">
             <?php
@@ -150,7 +150,7 @@
                 )->class('form-control select2-tags')->attributes(["$required"]) }}
         </div>
     </div>
-</div>
+</div> -->
 <div class="row mb-3">
     <div class="col-6">
         <div class="form-group">
@@ -169,7 +169,7 @@
             {{ html()->select($field_name, $select_options)->placeholder($field_placeholder)->class('form-control select2')->attributes(["$required"]) }}
         </div>
     </div>
-    <div class="col-6">
+    <!-- <div class="col-6">
         <div class="form-group">
             <?php
             $field_name = 'published_at';
@@ -190,14 +190,14 @@
             </div> -->
 
         </div>
-    </div>
+    </div> -->
 </div>
 <div class="row mb-3">
     <div class="col-5">
         <div class="form-group">
             <?php
             $field_name = 'meta_title';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Bedroom");
             $field_placeholder = $field_lable;
             $required = "";
             ?>
@@ -209,7 +209,7 @@
         <div class="form-group">
             <?php
             $field_name = 'meta_keywords';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Bathroom");
             $field_placeholder = $field_lable;
             $required = "";
             ?>
@@ -217,7 +217,7 @@
             {{ html()->text($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
     </div>
-    <div class="col-2">
+    <!-- <div class="col-2">
         <div class="form-group">
             <?php
             $field_name = 'order';
@@ -228,14 +228,14 @@
             {{ html()->label($field_lable, $field_name) }} {!! fielf_required($required) !!}
             {{ html()->text($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
-    </div>
+    </div> -->
 </div>
 <div class="row mb-3">
     <div class="col-12 col-sm-6">
         <div class="form-group">
             <?php
             $field_name = 'meta_description';
-            $field_lable = __("article::$module_name.$field_name");
+            $field_lable = __("Square");
             $field_placeholder = $field_lable;
             $required = "";
             ?>
@@ -243,7 +243,7 @@
             {{ html()->text($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
     </div>
-    <div class="col-12 col-sm-6">
+    <!-- <div class="col-12 col-sm-6">
         <div class="form-group">
             <?php
             $field_name = 'meta_og_image';
@@ -254,10 +254,10 @@
             {{ html()->label($field_lable, $field_name) }} {!! fielf_required($required) !!}
             {{ html()->text($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
-    </div>
+    </div> -->
 </div>
 <div class="row mb-3">
-    <div class="col-12">
+    <!-- <div class="col-12">
         <div class="form-group">
             <?php
             $field_name = 'meta_og_url';
@@ -268,7 +268,7 @@
             {{ html()->label($field_lable, $field_name) }} {!! fielf_required($required) !!}
             {{ html()->text($field_name)->placeholder($field_placeholder)->class('form-control')->attributes(["$required"]) }}
         </div>
-    </div>
+    </div> -->
 </div>
 <div></div>
 
