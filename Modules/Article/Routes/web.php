@@ -54,12 +54,15 @@ Route::group(['namespace' => '\Modules\Article\Http\Controllers\Backend', 'as' =
      */
     $module_name = 'posts';
     $controller_name = 'PostsController';
+
+
+    Route::get("$module_name/scanning", ['as' => "$module_name.scanning", 'uses' => "$controller_name@scanning"]);
+
     Route::get("$module_name/index_list", ['as' => "$module_name.index_list", 'uses' => "$controller_name@index_list"]);
     Route::get("$module_name/index_data", ['as' => "$module_name.index_data", 'uses' => "$controller_name@index_data"]);
     Route::get("$module_name/trashed", ['as' => "$module_name.trashed", 'uses' => "$controller_name@trashed"]);
     Route::patch("$module_name/trashed/{id}", ['as' => "$module_name.restore", 'uses' => "$controller_name@restore"]);
     Route::resource("$module_name", "$controller_name");
-
     /*
      *
      *  Categories Routes
@@ -73,4 +76,11 @@ Route::group(['namespace' => '\Modules\Article\Http\Controllers\Backend', 'as' =
     Route::get("$module_name/trashed", ['as' => "$module_name.trashed", 'uses' => "$controller_name@trashed"]);
     Route::patch("$module_name/trashed/{id}", ['as' => "$module_name.restore", 'uses' => "$controller_name@restore"]);
     Route::resource("$module_name", "$controller_name");
+
+    $module_name = 'buildings';
+    $controller_name = 'BuildingsController';
+    Route::post("$module_name/settings", ['as' => "$module_name.settings", 'uses' => "$controller_name@settings"]);
+    Route::get("$module_name/building_get", ['as' => "$module_name.building_get", 'uses' => "$controller_name@building_get"]);
+    Route::resource("$module_name", "$controller_name");
+
 });

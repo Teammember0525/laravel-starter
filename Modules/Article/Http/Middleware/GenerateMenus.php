@@ -34,19 +34,19 @@ class GenerateMenus
                 'href'  => '#',
             ]);
 
-            // Submenu: Posts
-            $articles_menu->add('<i class="nav-icon fas fa-file-alt"></i> '.__('Address'), [
-                'route' => 'backend.posts.index',
-                'class' => 'nav-item',
-            ])
-            ->data([
-                'order'         => 82,
-                'activematches' => 'admin/posts*',
-                'permission'    => ['edit_posts'],
-            ])
-            ->link->attr([
-                'class' => 'nav-link',
-            ]);
+//            // Submenu: Posts
+//            $articles_menu->add('<i class="nav-icon fas fa-file-alt"></i> '.__('Address'), [
+//                'route' => 'backend.posts.index',
+//                'class' => 'nav-item',
+//            ])
+//            ->data([
+//                'order'         => 82,
+//                'activematches' => 'admin/posts*',
+//                'permission'    => ['edit_posts'],
+//            ])
+//            ->link->attr([
+//                'class' => 'nav-link',
+//            ]);
             // Submenu: Categories
             $articles_menu->add('<i class="nav-icon fas fa-sitemap"></i> '.__('City'), [
                 'route' => 'backend.categories.index',
@@ -56,6 +56,20 @@ class GenerateMenus
                 'order'         => 83,
                 'activematches' => 'admin/categories*',
                 'permission'    => ['edit_categories'],
+            ])
+            ->link->attr([
+                'class' => 'nav-link',
+            ]);
+
+            //building infor
+            $articles_menu->add('<i class="nav-icon fas fa-building"></i> '.__('Address'), [
+                'route' => 'backend.buildings.index',
+                'class' => 'nav-item',
+            ])
+            ->data([
+                'order'         => 84,
+                'activematches' => 'admin/buildings*',
+                'permission'    => ['edit_posts'],
             ])
             ->link->attr([
                 'class' => 'nav-link',

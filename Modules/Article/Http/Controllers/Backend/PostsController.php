@@ -8,6 +8,8 @@ use Carbon\Carbon;
 use Flash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -17,6 +19,7 @@ use Modules\Article\Events\PostUpdated;
 use Modules\Article\Http\Requests\Backend\PostsRequest;
 use Spatie\Activitylog\Models\Activity;
 use Yajra\DataTables\DataTables;
+use function Symfony\Component\String\length;
 
 class PostsController extends Controller
 {
@@ -24,6 +27,7 @@ class PostsController extends Controller
 
     public function __construct()
     {
+        $this->remember = 0;
         // Page Title
         $this->module_title = 'Address';
 
@@ -47,6 +51,9 @@ class PostsController extends Controller
      */
     public function index()
     {
+
+
+
         $module_title = $this->module_title;
         $module_name = $this->module_name;
         $module_path = $this->module_path;
@@ -368,6 +375,7 @@ class PostsController extends Controller
     {
         $module_title = $this->module_title;
         $module_name = $this->module_name;
+        $module_name = $this->module_name;
         $module_path = $this->module_path;
         $module_icon = $this->module_icon;
         $module_model = $this->module_model;
@@ -384,4 +392,74 @@ class PostsController extends Controller
 
         return redirect("admin/$module_name");
     }
+
+    public function scanning() {
+        $response_for_sale = Http::get('https://www.zillow.com/search/GetSearchPageState.htm', [
+            'searchQueryState' => '{"pagination":{"currentPage":2},"mapBounds":{"west":-98.36936268164062,"east":-97.20206531835937,"south":29.91852065901562,"north":30.667921672520016},"regionSelection":[{"regionId":10221,"regionType":6}],"isMapVisible":false,"filterState":{"isAllHomes":{"value":true},"sortSelection":{"value":"globalrelevanceex"}},"isListVisible":true}',
+            'wants' => '{"cat1":["listResults","mapResults"],"cat2":["total"],"regionResults":["total"]}',
+            'requestId' => 25
+        ]);
+        $data = $response_for_sale->json();
+        echo count($data['cat1']['searchResults']['listResults']);exit();
+        $remember_id = DB::table('home_infos')->orderBy('id', 'desc')->limit(1)->first();
+        //echo $remember_id->info2string;
+         for($i=1; $i<21; $i++) {
+             $response_for_sale = Http::get('https://www.zillow.com/search/GetSearchPageState.htm', [
+                 'searchQueryState' => '{"pagination":{"currentPage":'. $i .'},"mapBounds":{"west":-98.36936268164062,"east":-97.20206531835937,"south":29.91852065901562,"north":30.667921672520016},"regionSelection":[{"regionId":10221,"regionType":6}],"isMapVisible":false,"filterState":{"isAllHomes":{"value":true},"sortSelection":{"value":"globalrelevanceex"}},"isListVisible":true}',
+                 'wants' => '{"cat1":["listResults","mapResults"],"cat2":["total"],"regionResults":["total"]}',
+                 'requestId' => $i
+             ]);
+//             $reponse_for_rent = Http::get('https://www.zillow.com/search/GetSearchPageState.htm', [
+//                 'searchQueryState' => '{"pagination":{"currentPage":3},"mapBounds":{"west":-98.22585377050781,"east":-97.34557422949219,"south":29.918520659015634,"north":30.667921672520016},"regionSelection":[{"regionId":10221,"regionType":6}],"isMapVisible":true,"filterState":{"isAllHomes":{"value":true},"isForSaleByAgent":{"value":false},"isForSaleByOwner":{"value":false},"isNewConstruction":{"value":false},"isComingSoon":{"value":false},"isAuction":{"value":false},"isForSaleForeclosure":{"value":false},"isForRent":{"value":true}},"isListVisible":true}',
+//                 'wants' => '{"cat1":["listResults","mapResults"]}',
+//                 'requestId' => $i
+//             ]);
+//             $reponse_for_sold = Http::get('https://www.zillow.com/search/GetSearchPageState.htm', [
+//                 'searchQueryState' => '{"pagination":{"currentPage":2},"mapBounds":{"west":-98.22585377050781,"east":-97.34557422949219,"south":29.918520659015634,"north":30.667921672520016},"regionSelection":[{"regionId":10221,"regionType":6}],"isMapVisible":true,"filterState":{"isAllHomes":{"value":true},"isForSaleByAgent":{"value":false},"isForSaleByOwner":{"value":false},"isNewConstruction":{"value":false},"isComingSoon":{"value":false},"isAuction":{"value":false},"isForSaleForeclosure":{"value":false},"isRecentlySold":{"value":true},"sortSelection":{"value":"globalrelevanceex"}},"isListVisible":true}',
+//                 'wants' => '{"cat1":["listResults","mapResults"]}',
+//                 'requestId' => 1
+//             ]);
+             $data = $response_for_sale->json();
+//             $data_rent = $reponse_for_rent->json();
+//             $data_sold = $reponse_for_sold->json();
+             if ($data == null) {
+                 $this->remember = $i;
+                 $last_id = DB::table('home_infos')->orderBy('id', 'desc')->limit(1)->first();
+                 DB::table('home_infos')->where('id', $last_id->id)->update([
+                     'info2string' => $this->remember,
+                 ]);
+             }else {
+                 $temp = $data['cat1']['searchResults']['listResults'];
+                 $this->insertData($temp);
+//                 $temp1 = $data_rent['cat1']['searchResults']['listResults'];
+//                 $this->insertData($temp1);
+//                 $temp2 = $data_sold['cat1']['searchResults']['listResults'];
+//                 $this->insertData($temp2);
+             }
+
+         }
+
+
+    }
+
+    public function buildings () {
+        $module_title = $this->module_title;
+        $module_name = $this->module_name;
+        $module_path = $this->module_path;
+        $module_icon = $this->module_icon;
+        $module_model = $this->module_model;
+        $module_name_singular = Str::singular($module_name);
+
+        $module_action = 'List';
+
+        $$module_name = $module_model::latest()->paginate();
+
+        Log::info(label_case($module_title.' '.$module_action).' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
+
+        return view(
+            "article::backend.$module_path.buildings",
+            compact('module_title', 'module_name', "$module_name", 'module_icon', 'module_name_singular', 'module_action')
+        );
+    }
+
 }
