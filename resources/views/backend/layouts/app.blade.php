@@ -40,6 +40,7 @@
 </head>
 
 <body>
+<div id="notifications"></div>
     <!-- Sidebar -->
     @include('backend.includes.sidebar')
     <!-- /Sidebar -->
@@ -61,7 +62,7 @@
                 <!-- Main content block -->
                 @yield('content')
                 <!-- / Main content block -->
-                
+
             </div>
         </div>
 

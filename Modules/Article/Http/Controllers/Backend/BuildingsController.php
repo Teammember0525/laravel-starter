@@ -47,7 +47,7 @@ class BuildingsController extends Controller
      */
     public function index()
     {
-        
+
         $module_title = $this->module_title;
         $module_name = $this->module_name;
         $module_path = $this->module_path;
@@ -62,12 +62,17 @@ class BuildingsController extends Controller
         Log::info(label_case($module_title.' '.$module_action).' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
         $first = DB::table('home_infos')->orderBy('id')->first();
         $add_state = '';
+        $add_suffix = '';
         if($first->perfix_word != null && $first->perfix_word != '') {
             $add_state = $first->perfix_word;
+
+        }
+        if($first->subfix_word != null && $first->subfix_word != '') {
+            $add_suffix = $first->subfix_word;
         }
         return view(
             "article::backend.$module_path.index",
-            compact('module_title', 'module_name', "$module_name", 'module_icon', 'module_name_singular', 'module_action', 'add_state')
+            compact('module_title', 'module_name', "$module_name", 'module_icon', 'module_name_singular', 'module_action', 'add_state', 'add_suffix')
         );
     }
     public function building_get() {
@@ -75,7 +80,7 @@ class BuildingsController extends Controller
         $data = DB::table('home_infos')->select('id', 'zpid', 'home_id', 'statusType', 'statusText', 'price', 'address', 'imageSrc','beds', 'baths', 'area')->get();
         return DataTables::of($data)
             ->editColumn('imageSrc', function ($info) {
-                return '<img src="' .$info->imageSrc.'" max-width="100px"/>';
+                return '<img src="' .$info->imageSrc.'" width="100px"/>';
             })
             ->rawColumns(['imageSrc'])
             ->make(true);
@@ -87,19 +92,35 @@ class BuildingsController extends Controller
     }
     public function show(Request $request) {
 
+        $type = $request->get('type');
         $content = $request->get('content');
+        if($type == 1) {
 
-        if($request->get('status') == 'true') {
-            DB::table('home_infos')->update(['perfix_word' => $content]);
-            DB::update('update home_infos set address = CONCAT("'. $content .'", address)');
-            return 'save_success';
-        }elseif ($request->get('status') == 'false') {
-            $first = DB::table('home_infos')->orderBy('id')->first();
-            $search = $first->perfix_word;
-            DB::update('update home_infos set address = REPLACE(address,"'. $search .'", "'. $content .'")');
-            DB::table('home_infos')->update(['perfix_word' => $content]);
-            return 'update_success';
+            if($request->get('status') == 'true') {
+                DB::table('home_infos')->update(['perfix_word' => $content]);
+                DB::update('update home_infos set address = CONCAT("'. $content .'", address)');
+                return 'save_success';
+            }elseif ($request->get('status') == 'false') {
+                $first = DB::table('home_infos')->orderBy('id')->first();
+                $search = $first->perfix_word;
+                DB::update('update home_infos set address = REPLACE(address,"'. $search .'", "'. $content .'")');
+                DB::table('home_infos')->update(['perfix_word' => $content]);
+                return 'update_success';
+            }
+        }else if($type == 2) {
+            if($request->get('status') == 'true') {
+                DB::table('home_infos')->update(['subfix_word' => $content]);
+                DB::update('update home_infos set address = CONCAT(address, "'. $content .'")');
+                return 'save_success';
+            }elseif($request->get('status') == 'false') {
+                $first = DB::table('home_infos')->orderBy('id')->first();
+                $search = $first->subfix_word;
+                DB::update('update home_infos set address = REPLACE(address,"'. $search .'", "'. $content .'")');
+                DB::table('home_infos')->update(['subfix_word' => $content]);
+                return 'update_success';
+            }
         }
+
     }
 
 }

@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
            $this->loading();
-        })->everyFourMinutes();
+        })->everyFiveMinutes();
 
     }
 
@@ -65,18 +65,18 @@ class Kernel extends ConsoleKernel
                 ]);
                 break;
             }else {
-                if(count($data['cat1']['searchResults']['listResults']) != 0) {
-                    $temp = $data['cat1']['searchResults']['listResults'];
-                    $this->insertData($temp);
+//                if(count($data['cat1']['searchResults']['listResults']) != 0) {
+//                    $temp = $data['cat1']['searchResults']['listResults'];
+//                    $this->insertData($temp);
 //                 $temp1 = $data_rent['cat1']['searchResults']['listResults'];
 //                 $this->insertData($temp1);
 //                 $temp2 = $data_sold['cat1']['searchResults']['listResults'];
 //                 $this->insertData($temp2);
-                }
+//                }
                 if(count($data['cat1']['searchResults']['mapResults']) != 0) {
                     $temp_map = $data['cat1']['searchResults']['mapResults'];
                     $this->insertData($temp_map);
-
+                    echo count($data['cat1']['searchResults']['mapResults']);
                 }
 
             }
