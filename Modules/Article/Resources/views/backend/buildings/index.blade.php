@@ -15,9 +15,26 @@
         .notification {
             z-index: 1000000!important;
         }
+        @media screen and (max-width: 840px) {
+            .ss {
+                width: 100%;
+            }
+
+            .dataTables_length {
+                text-align: left;
+            }
+        }
+        @media screen and (max-width: 1030px) {
+            .card-title {
+                display: none;
+            }
+            .text-medium-emphasis {
+                display: none;
+            }
+        }
     </style>
     <div class="card">
-        <div class="card-body">
+        <div class="card-body" style="overflow: scroll">
 
             <x-backend.section-header>
                 <i class="{{ $module_icon }}"></i> {{ __($module_title) }} <small class="text-muted">{{ __($module_action) }}</small>
@@ -29,32 +46,18 @@
                     @can('add_'.$module_name)
 
                     @endcan
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                        <button type="button" style="margin: 10px" class="btn btn-primary ss" data-toggle="modal" data-target="#myModal">
                             Setting Prefix
                         </button>
-                        <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#myModal1">
+                        <button type="button" style="margin: 10px" class="btn btn-warning ss" data-toggle="modal" data-target="#myModal1">
                             Setting Suffix
                         </button>
 
-                        <button type="button" class="btn btn-info">
+                        <button type="button" style="margin: 10px" class="btn btn-info ss" onclick="scraping()">
                             Auto Scheduling
                         </button>
                     @can('restore_'.$module_name)
-                        <div class="btn-group">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" data-coreui-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-cog"></i>
-                            </button>
-                            <ul class="dropdown-menu">
-{{--                                <li>--}}
-{{--                                    <a class="dropdown-item" href='{{ route("backend.$module_name.trashed") }}'>--}}
-{{--                                        <i class="fas fa-eye-slash"></i> View trash--}}
-{{--                                    </a>--}}
-{{--                                </li>--}}
-                                <!-- <li>
-                                    <hr class="dropdown-divider">
-                                </li> -->
-                            </ul>
-                        </div>
+
                     @endcan
                 </x-slot>
             </x-backend.section-header>
@@ -189,12 +192,13 @@
 
     <script type="text/javascript" src="{{ asset('vendor/datatable/datatables.min.js') }}"></script>
     <script type="text/javascript">
+        var param = location.search;
         $('#datatable').DataTable({
             processing: true,
             serverSide: true,
             autoWidth: true,
             responsive: true,
-            ajax: '{{ route("backend.$module_name.building_get") }}',
+            ajax: '{{ url("admin/$module_name/building_get") }}'+param,
             columns: [
                 {
                     data: 'id',
@@ -257,6 +261,24 @@
             $.ajax('{{ route("backend.$module_name.settings") }}', {
                 type: 'get',
                 data: {status: status, content: content, type:type},
+                success: function (data, status, xhr) {
+                    if(data == 'save_success'){
+                        newNotification('Save Prefix Words', 1);
+                        window.location.reload();
+                    }else {
+                        newNotification('Change Prefix Words', 1);
+                        window.location.reload();
+                    }
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+
+                }
+            });
+        }
+        function scraping() {
+            $.ajax('{{ route("backend.$module_name.scraping") }}', {
+                type: 'get',
+                data: {status: 1,},
                 success: function (data, status, xhr) {
                     if(data == 'save_success'){
                         newNotification('Save Prefix Words', 1);

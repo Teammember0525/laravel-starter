@@ -17,11 +17,17 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Article\Http\Requests\Backend\PostsRequest;
 use Yajra\DataTables\DataTables;
-
+use function Spatie\Backup\BackupDestination\exists;
+use Applitools\RectangleSize;
+use Applitools\Selenium\Eyes;
+use Facebook\WebDriver\Remote\RemoteWebDriver;
+use Facebook\WebDriver\Remote\WebDriverCapabilityType;
+use Facebook\WebDriver\WebDriverBy;
 class BuildingsController extends Controller
 {
     use Authorizable;
-
+    protected $url = 'https://www.zillow.com/homedetails/353-Mananai-Pl-36R-Honolulu-HI-96818/2062652611_zpid/';
+    protected $webDriver;
     public function __construct()
     {
         // Page Title
@@ -45,7 +51,7 @@ class BuildingsController extends Controller
      *
      * @return Response
      */
-    public function index()
+    public function index(Request $request)
     {
 
         $module_title = $this->module_title;
@@ -56,7 +62,9 @@ class BuildingsController extends Controller
         $module_name_singular = Str::singular($module_name);
 
         $module_action = 'List';
-
+        if($request->get('address') != '' && $request->get('address') != null) {
+            $module_title = $request->get('address');
+        }
         $$module_name = $module_model::latest()->paginate();
 
         Log::info(label_case($module_title.' '.$module_action).' | User:'.Auth::user()->name.'(ID:'.Auth::user()->id.')');
@@ -75,15 +83,34 @@ class BuildingsController extends Controller
             compact('module_title', 'module_name', "$module_name", 'module_icon', 'module_name_singular', 'module_action', 'add_state', 'add_suffix')
         );
     }
-    public function building_get() {
+    public function building_get(Request $request) {
+        $param = $request->get('address');
 
-        $data = DB::table('home_infos')->select('id', 'zpid', 'home_id', 'statusType', 'statusText', 'price', 'address', 'imageSrc','beds', 'baths', 'area')->get();
-        return DataTables::of($data)
-            ->editColumn('imageSrc', function ($info) {
-                return '<img src="' .$info->imageSrc.'" width="100px"/>';
-            })
-            ->rawColumns(['imageSrc'])
-            ->make(true);
+        if($param != '' && $param != null) {
+
+            $get_city_id = DB::table('categories')->where('name', $param)->first();
+            if(DB::table('home_infos')->where('city_id', $get_city_id->id)->exists()) {
+                $data = DB::table('home_infos')->select('id', 'zpid', 'home_id', 'statusType', 'statusText', 'price', 'address', 'imageSrc','beds', 'baths', 'area')->where('city_id', $get_city_id->id)->get();
+
+                return DataTables::of($data)
+                    ->editColumn('imageSrc', function ($info) {
+                        return '<img src="' .$info->imageSrc.'" width="100px"/>';
+                    })
+                    ->rawColumns(['imageSrc'])
+                    ->make(true);
+            }else {
+                return DataTables::of([])->make(true);
+            }
+
+        }else {
+            $data = DB::table('home_infos')->select('id', 'zpid', 'home_id', 'statusType', 'statusText', 'price', 'address', 'imageSrc','beds', 'baths', 'area')->get();
+            return DataTables::of($data)
+                ->editColumn('imageSrc', function ($info) {
+                    return '<img src="' .$info->imageSrc.'" width="100px"/>';
+                })
+                ->rawColumns(['imageSrc'])
+                ->make(true);
+        }
 
     }
 
@@ -91,7 +118,6 @@ class BuildingsController extends Controller
 
     }
     public function show(Request $request) {
-
         $type = $request->get('type');
         $content = $request->get('content');
         if($type == 1) {
@@ -120,7 +146,101 @@ class BuildingsController extends Controller
                 return 'update_success';
             }
         }
-
     }
 
+
+    public function scraping() {
+        $response = Http::withHeaders(['accept' => 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8', 'accept-encoding' => 'gzip, deflate, br', 'accept-language' => 'en-US,en;q=0.8', 'upgrade-insecure-requests' => '1', 'user-agent' => 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951 Safari/537.36'])->get('https://www.zillow.com/homedetails/92-831-Makakilo-Dr-APT-23-Kapolei-HI-96707/61194373_zpid/');
+        dd($response); exit();
+//        $response_for_sale = Http::get('https://www.zillow.com/search/GetSearchPageState.htm', [
+//            'searchQueryState' => '{"pagination":{},"usersSearchTerm":"Kapolei, HI","mapBounds":{"west":-158.31040816308592,"east":-157.85584883691405,"south":21.15340351122823,"north":21.557566262021897},"regionSelection":[{"regionId":45983,"regionType":6}],"isMapVisible":true,"filterState":{"sortSelection":{"value":"globalrelevanceex"},"isAllHomes":{"value":true}},"isListVisible":true,"mapZoom":11}',
+//            'wants' => '{"cat1":["listResults","mapResults"],"cat2":["total"],"regionResults":["total"]}',
+//            'requestId' => 7
+//        ]);
+//        $data = $response_for_sale->json();
+//        if ($data == null) {sidebar sidebar-dark sidebar-fixed
+//            echo 'error';
+//        }else {
+//            if(count($data['cat1']['searchResults']['listResults']) != 0) {
+//                $temp = $data['cat1']['searchResults']['listResults'];
+//                $this->insertData($temp);
+//                echo 'success';
+//            }
+//        }
+
+//         Open a chrome browser.
+
+        $capabilities = array(WebDriverCapabilityType::BROWSER_NAME => 'chrome');
+        $this->webDriver = RemoteWebDriver::create('http://localhost:4444/wd/hub', $capabilities);
+
+        $this->webDriver->get($this->url);
+
+        // Initialize the eyes SDK and set your private API key.
+        $eyes = new Eyes();
+        $eyes->setApiKey('AXqF51F0uMluNg7hsaZHLMwUqRRTGczJtQB5E4KxXio110');
+
+        try {
+
+            $appName = 'Hello World!';
+            $testName = 'My first PHP test!';
+
+            // Start the test and set the browser's viewport size to 800x600
+            $eyes->open($this->webDriver, $appName, $testName,
+                new RectangleSize(800, 600));
+
+            // Visual checkpoint #1.
+            $eyes->checkWindow("Hello!");
+
+            // Click the "Click me!" button
+            $this->webDriver->findElement(WebDriverBy::tagName("button"))->click();
+
+            // Visual checkpoint #2.
+            $eyes->checkWindow("Click!");
+
+            // End the test.
+            $eyes->close();
+
+        } finally {
+
+            // Close the browser.
+            $this->webDriver->quit();
+
+            // If the test was aborted before eyes->close was called,
+            // ends the test as aborted.
+            $eyes->abortIfNotClosed();
+
+        }
+    }
+    public function insertData($params) {
+        foreach ($params as $item) {
+            if (DB::table('home_infos')->where('home_id', $item['id'])->doesntExist()) {
+                DB::table('home_infos')->insert([
+                    'zpid' => array_key_exists("zpid", $item) ? $item['zpid'] : '',
+                    'home_id' => array_key_exists("id", $item) ? $item['id'] : '',
+                    'providerListingId' =>array_key_exists("providerListingId", $item) ? $item['providerListingId'] : '',
+                    'imageSrc' => array_key_exists("imgSrc", $item) ? $item['imgSrc'] : '',
+                    'hasImage' => array_key_exists("hasImage", $item) ? $item['hasImage'] : '',
+                    'statusType' => array_key_exists("statusType", $item) ? $item['statusType'] : '',
+                    'statusText' => array_key_exists("statusText", $item) ? $item['statusText'] : '',
+                    'countryCurrency' => array_key_exists("countryCurrency", $item) ? $item['countryCurrency'] : '',
+                    'price' => array_key_exists("price", $item) ? $item['price'] : '',
+                    'unformattedPrice' => array_key_exists("unformattedPrice", $item) ? $item['unformattedPrice'] : '',
+                    'address' => array_key_exists("address", $item) ? $item['address'] : '',
+                    'addressStreet' => array_key_exists("addressStreet", $item) ? $item['addressStreet'] : '',
+                    'addressCity' => array_key_exists("addressCity", $item) ? $item['addressCity'] : '',
+                    'addressState' => array_key_exists("addressState", $item) ? $item['addressState'] : '',
+                    'addressZopcode' => array_key_exists("addressZipcode", $item) ? $item['addressZipcode'] : '',
+                    'isundisclosedAddress' => array_key_exists("isUndisclosedAddress", $item) ? $item['isUndisclosedAddress'] : '',
+                    'beds' => array_key_exists("beds", $item) ? $item['beds'] : 0,
+                    'baths' => array_key_exists("baths", $item) ? $item['baths'] : 0.0,
+                    'area' => array_key_exists("area", $item) ? $item['area'] : 0,
+                    'badegeInfo' => array_key_exists("badgeInfo", $item) ? $item['badgeInfo'] : '',
+                    'zestimate' => array_key_exists("zestimate", $item) ? $item['zestimate'] : '',
+                    'detail_url' => array_key_exists("detailUrl", $item) ? $item['detailUrl'] : '',
+                    'brokerName' => array_key_exists("brokerName", $item) ? $item['brokerName'] : '',
+                    'city_id' => 3
+                ]);
+            }
+        }
+    }
 }

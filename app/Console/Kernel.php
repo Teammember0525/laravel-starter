@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
         // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
            $this->loading();
-        })->everyFiveMinutes();
+        })->everyTwoMinutes();
 
     }
 
@@ -39,11 +39,11 @@ class Kernel extends ConsoleKernel
     public function loading() {
         $remember_id = DB::table('home_infos')->where('id', 1)->first();
 
-        for($i=$remember_id->info2string; $i<60; $i++) {
+//        for($i=$remember_id->info2string; $i<60; $i++) {
             $response_for_sale = Http::get('https://www.zillow.com/search/GetSearchPageState.htm', [
-                'searchQueryState' => '{"pagination":{"currentPage":'. $i .'},"mapBounds":{"west":-98.36936268164062,"east":-97.20206531835937,"south":29.91852065901562,"north":30.667921672520016},"regionSelection":[{"regionId":10221,"regionType":6}],"isMapVisible":false,"filterState":{"isAllHomes":{"value":true},"sortSelection":{"value":"globalrelevanceex"}},"isListVisible":true}',
+                'searchQueryState' => '{"pagination":{},"usersSearchTerm":"Mokuleia, Waianae, HI","mapBounds":{"west":-158.23348474121093,"east":-158.10851525878905,"south":21.52720225385012,"north":21.62808925288848},"regionSelection":[{"regionId":133379,"regionType":8}],"isMapVisible":true,"filterState":{"sortSelection":{"value":"globalrelevanceex"},"isAllHomes":{"value":true}},"isListVisible":true,"mapZoom":13}',
                 'wants' => '{"cat1":["listResults","mapResults"],"cat2":["total"],"regionResults":["total"]}',
-                'requestId' => $i
+                'requestId' => 3
             ]);
 //             $reponse_for_rent = Http::get('https://www.zillow.com/search/GetSearchPageState.htm', [
 //                 'searchQueryState' => '{"pagination":{"currentPage":'. $i .'},"mapBounds":{"west":-98.22585377050781,"east":-97.34557422949219,"south":29.918520659015634,"north":30.667921672520016},"regionSelection":[{"regionId":10221,"regionType":6}],"isMapVisible":true,"filterState":{"isAllHomes":{"value":true},"isForSaleByAgent":{"value":false},"isForSaleByOwner":{"value":false},"isNewConstruction":{"value":false},"isComingSoon":{"value":false},"isAuction":{"value":false},"isForSaleForeclosure":{"value":false},"isForRent":{"value":true}},"isListVisible":true}',
@@ -59,29 +59,29 @@ class Kernel extends ConsoleKernel
 //             $data_rent = $reponse_for_rent->json();
 //             $data_sold = $reponse_for_sold->json();
             if ($data == null) {
-                $this->remember = $i;
-                DB::table('home_infos')->where('id', 1)->update([
-                    'info2string' => $this->remember,
-                ]);
-                break;
+//                $this->remember = $i;
+//                DB::table('home_infos')->where('id', 1)->update([
+//                    'info2string' => $this->remember,
+//                ]);
+              //  break;
             }else {
-//                if(count($data['cat1']['searchResults']['listResults']) != 0) {
-//                    $temp = $data['cat1']['searchResults']['listResults'];
-//                    $this->insertData($temp);
+               if(count($data['cat1']['searchResults']['listResults']) != 0) {
+                    $temp = $data['cat1']['searchResults']['listResults'];
+                    $this->insertData($temp);
 //                 $temp1 = $data_rent['cat1']['searchResults']['listResults'];
 //                 $this->insertData($temp1);
 //                 $temp2 = $data_sold['cat1']['searchResults']['listResults'];
 //                 $this->insertData($temp2);
+               }
+//                if(count($data['cat1']['searchResults']['mapResults']) != 0) {
+//                    $temp_map = $data['cat1']['searchResults']['mapResults'];
+//                    $this->insertData($temp_map);
+//                    echo count($data['cat1']['searchResults']['mapResults']);
 //                }
-                if(count($data['cat1']['searchResults']['mapResults']) != 0) {
-                    $temp_map = $data['cat1']['searchResults']['mapResults'];
-                    $this->insertData($temp_map);
-                    echo count($data['cat1']['searchResults']['mapResults']);
-                }
 
             }
 
-        }
+        //}
     }
     public function insertData($params) {
         foreach ($params as $item) {

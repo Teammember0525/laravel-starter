@@ -1,5 +1,5 @@
-<div class="sidebar sidebar-dark sidebar-fixed" id="sidebar">
-    <div class="sidebar-brand d-none d-md-flex">
+<div class="sidebar sidebar-dark sidebar-fixed" id="sidebar" style="font-family: Sans-Serif">
+    <div class="sidebar-brand d-none d-md-flex" >
         <a href="{{route("backend.dashboard")}}" style='text-decoration: none'>
             <h1 style='color: white;'>OwnHawaii</h1>
             <!-- <img class="sidebar-brand-full" src="{{asset("img/backend-logo.jpg")}}" height="46" alt="{{ app_name() }}">

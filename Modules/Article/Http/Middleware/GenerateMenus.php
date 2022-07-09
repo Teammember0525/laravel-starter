@@ -3,6 +3,7 @@
 namespace Modules\Article\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Facades\DB;
 
 class GenerateMenus
 {
@@ -48,6 +49,8 @@ class GenerateMenus
 //                'class' => 'nav-link',
 //            ]);
             // Submenu: Categories
+
+
             $articles_menu->add('<i class="nav-icon fas fa-sitemap"></i> '.__('City'), [
                 'route' => 'backend.categories.index',
                 'class' => 'nav-item',
@@ -74,6 +77,23 @@ class GenerateMenus
             ->link->attr([
                 'class' => 'nav-link',
             ]);
+            $addresses = DB::table('categories')->get();
+            foreach ($addresses as $address) {
+                $articles_menu->add('<i class="nav-icon fas fa-plane"></i> '.__($address->name), [
+                    'url' => 'admin/buildings?address='. $address->name,
+                    'class' => 'nav-item',
+                    'style' => 'background:black;padding-left:20px',
+
+                ])
+                    ->data([
+                        'order'         => 84,
+                        'activematches' => 'admin/buildings*',
+                        'permission'    => ['edit_posts'],
+                    ])
+                    ->link->attr([
+                        'class' => 'nav-link',
+                    ]);
+            }
         })->sortBy('order');
 
         return $next($request);

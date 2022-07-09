@@ -109,7 +109,7 @@ class CategoriesController extends Controller
 
         $module_action = 'List';
 
-        $$module_name = $module_model::select('id', 'name', 'slug', 'updated_at');
+        $$module_name = $module_model::select('id', 'name', 'slug', 'description', 'created_at');
 
         $data = $$module_name;
 
@@ -123,12 +123,12 @@ class CategoriesController extends Controller
                         ->editColumn('updated_at', function ($data) {
                             $module_name = $this->module_name;
 
-                            $diff = Carbon::now()->diffInHours($data->updated_at);
+                            $diff = Carbon::now()->diffInHours($data->created_at);
 
                             if ($diff < 25) {
-                                return $data->updated_at->diffForHumans();
+                                return $data->created_at->diffForHumans();
                             } else {
-                                return $data->updated_at->isoFormat('LLLL');
+                                return $data->created_at->isoFormat('LLLL');
                             }
                         })
                         ->rawColumns(['name', 'action'])

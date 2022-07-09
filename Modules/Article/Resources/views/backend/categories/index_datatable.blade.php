@@ -14,7 +14,6 @@
 
         <x-backend.section-header>
             <i class="{{ $module_icon }}"></i> {{ __($module_title) }} <small class="text-muted">{{ __($module_action) }}</small>
-
             <x-slot name="subtitle">
                 <!-- @lang(":module_name Management Dashboard", ['module_name'=>Str::title($module_name)]) -->
                 @lang("City Management Dashboard")
@@ -56,7 +55,13 @@
                                 City Name
                             </th>
                             <th>
-                                Updated At
+                                Country
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Created At
                             </th>
                             <th class="text-end">
                                 Action
@@ -111,8 +116,16 @@
                 name: 'name'
             },
             {
-                data: 'updated_at',
-                name: 'updated_at'
+                data: 'slug',
+                name: 'slug'
+            },
+            {
+                data: 'description',
+                name: 'description'
+            },
+            {
+                data: 'created_at',
+                name: 'created_at'
             },
             {
                 data: 'action',

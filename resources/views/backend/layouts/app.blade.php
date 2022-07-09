@@ -27,7 +27,7 @@
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+Bengali+UI&display=swap" rel="stylesheet" />
     <style>
         body {
-            font-family: Ubuntu, "Noto Sans Bengali UI", Arial, Helvetica, sans-serif
+            font-family: sans-serif
         }
     </style>
 
@@ -39,7 +39,7 @@
 
 </head>
 
-<body>
+<body style="font-family: Sans-Serif">
 <div id="notifications"></div>
     <!-- Sidebar -->
     @include('backend.includes.sidebar')
