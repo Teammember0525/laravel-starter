@@ -32,6 +32,32 @@
                 display: none;
             }
         }
+        .img-size{
+            /* 	padding: 0;
+                margin: 0; */
+            height: 450px;
+            width: 100%;
+            background-size: cover;
+            overflow: hidden;
+        }
+        .modal-content#gallary {
+            width: 100%;
+            border:none;
+        }
+        .modal-body#gallary1 {
+            padding: 0;
+        }
+
+        .carousel-control-prev-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23009be1' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+            width: 30px;
+            height: 48px;
+        }
+        .carousel-control-next-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23009be1' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+            width: 30px;
+            height: 48px;
+        }
     </style>
     <div class="card">
         <div class="card-body" style="overflow: scroll">
@@ -76,13 +102,13 @@
                             <th width="10%">
                                 Image
                             </th>
-                            <th>
+                            <th width="20%">
                                 Address
                             </th>
                             <th width="10%">
                                 statusType
                             </th>
-                            <th width="20%">
+                            <th width="10%">
                                 statusText
                             </th>
                             <th>
@@ -97,9 +123,9 @@
                             <th>
                                 Price
                             </th>
-{{--                            <th class="text-end">--}}
-{{--                                Action--}}
-{{--                            </th>--}}
+                            <th class="text-end" width="10%">
+                                Action
+                            </th>
                         </tr>
                         </thead>
                     </table>
@@ -179,6 +205,43 @@
             </div>
         </div>
     </div>
+    <!-- gallary-->
+    <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="gallary">
+                <div class="modal-body" id="gallary1">
+                    <!-- carousel -->
+                    <div id='carouselExampleIndicators' class='carousel slide' data-ride='carousel'>
+                        <ol class='carousel-indicators' id="build_next">
+
+                        </ol>
+                        <div class='carousel-inner' id="build_slider_images">
+
+                        </div>
+                        <a class='carousel-control-prev' href='#carouselExampleIndicators' role='button' data-slide='prev'>
+                      <span class='carousel-control-prev-icon' aria-hidden='true'></span>
+                    <span class='sr-only'>Previous</span>
+                </a>
+                <a
+                    class='carousel-control-next'
+                    href='#carouselExampleIndicators'
+                    role='button'
+                    data-slide='next'
+                >
+              <span
+                  class='carousel-control-next-icon'
+                  aria-hidden='true'
+              ></span>
+                            <span class='sr-only'>Next</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push ('after-styles')
@@ -239,6 +302,10 @@
                 {
                     data: 'price',
                     name: 'price'
+                },
+                {
+                    data: 'action',
+                    name: 'action'
                 }
             ]
         });
@@ -275,10 +342,37 @@
                 }
             });
         }
+
+        function getImage(ID) {
+            $.ajax('{{ route("backend.$module_name.getImage") }}', {
+                type: 'get',
+                data: {ID: ID},
+                success: function (data, status, xhr) {
+                    var html_build_next = '';
+                    var html_build_image = '';
+                    $('#build_next').empty();
+                    $('#html_build_image').empty();
+                    data.map((item, index) => {
+                        if(index == 0) {
+                            html_build_next = html_build_next + '<li data-target="#carouselExampleIndicators" data-slide-to="'+ index +'" class="active"></li>';
+                            html_build_image = html_build_image + '<div class="carousel-item active"><img class="img-size" src="'+ item.image_path +'"></div>';
+                        }else {
+                            html_build_next = html_build_next + '<li data-target="#carouselExampleIndicators" data-slide-to="'+ index +'"></li>';
+                            html_build_image = html_build_image + '<div class="carousel-item"><img class="img-size" src="'+ item.image_path +'"></div>';
+                        }
+                    })
+                    $('#build_next').append(html_build_next);
+                    $('#build_slider_images').append(html_build_image);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+
+                }
+            });
+        }
         function scraping() {
             $.ajax('{{ route("backend.$module_name.scraping") }}', {
                 type: 'get',
-                data: {status: 1,},
+                data: {status: 1},
                 success: function (data, status, xhr) {
                     if(data == 'save_success'){
                         newNotification('Save Prefix Words', 1);

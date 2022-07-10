@@ -10,7 +10,7 @@
 
 @section('content')
 <div class="card">
-    <div class="card-body">
+    <div class="card-body" style="overflow: scroll">
 
         <x-backend.section-header>
             <i class="{{ $module_icon }}"></i> {{ __($module_title) }} <small class="text-muted">{{ __($module_action) }}</small>

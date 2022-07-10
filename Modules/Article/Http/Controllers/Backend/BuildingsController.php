@@ -93,10 +93,14 @@ class BuildingsController extends Controller
                 $data = DB::table('home_infos')->select('id', 'zpid', 'home_id', 'statusType', 'statusText', 'price', 'address', 'imageSrc','beds', 'baths', 'area')->where('city_id', $get_city_id->id)->get();
 
                 return DataTables::of($data)
+                    ->addColumn('action', function ($data) {
+                        $module_name = $this->module_name;
+                        return ('<button class="btn btn-primary" style="padding: 9px;margin-right: 10px" onclick="buildingEdit('.$data->id.')"><i class="fa fa-edit"></i></button><button class="btn btn-success " onclick="getImage('. $data->id .')" data-toggle="modal" data-target="#largeModal" style="padding: 9px;padding-left: 11px;padding-right: 11px;"><i class="fa fa-play"></i></button>');
+                    })
                     ->editColumn('imageSrc', function ($info) {
                         return '<img src="' .$info->imageSrc.'" width="100px"/>';
                     })
-                    ->rawColumns(['imageSrc'])
+                    ->rawColumns(['imageSrc', 'action'])
                     ->make(true);
             }else {
                 return DataTables::of([])->make(true);
@@ -105,15 +109,24 @@ class BuildingsController extends Controller
         }else {
             $data = DB::table('home_infos')->select('id', 'zpid', 'home_id', 'statusType', 'statusText', 'price', 'address', 'imageSrc','beds', 'baths', 'area')->get();
             return DataTables::of($data)
+                ->addColumn('action', function ($data) {
+                    $module_name = $this->module_name;
+                    return ('<button class="btn btn-primary" style="padding: 9px;"><i class="fa fa-edit"></i></button>');
+                })
                 ->editColumn('imageSrc', function ($info) {
                     return '<img src="' .$info->imageSrc.'" width="100px"/>';
                 })
-                ->rawColumns(['imageSrc'])
+                ->rawColumns(['imageSrc', 'action'])
                 ->make(true);
         }
 
     }
+    public function getImage(Request $request) {
+        $id = $request->get('ID');
 
+        $images = DB::table('images')->where('address_id', $id)->get();
+        return response()->json($images);
+    }
     public function settings(Request $request) {
 
     }
