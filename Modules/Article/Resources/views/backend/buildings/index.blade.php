@@ -32,10 +32,13 @@
                 display: none;
             }
         }
+        #edit_building {
+            max-width: 80%!important;
+        }
         .img-size{
             /* 	padding: 0;
                 margin: 0; */
-            height: 450px;
+            height: auto;
             width: 100%;
             background-size: cover;
             overflow: hidden;
@@ -44,10 +47,19 @@
             width: 100%;
             border:none;
         }
-        .modal-body#gallary1 {
-            padding: 0;
+        .mo {
+            background:rgba(44,56,74,.95)!important;
+            color:white!important
         }
-
+        .modal-body#gallary1 {
+            height:500px;
+            overflow-y:scroll;
+            padding-top:0px;
+            padding:bottom:0px
+        }
+        .bo {
+            font-weight: bold;
+        }
         .carousel-control-prev-icon {
             background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23009be1' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
             width: 30px;
@@ -58,6 +70,7 @@
             width: 30px;
             height: 48px;
         }
+
     </style>
     <div class="card">
         <div class="card-body" style="overflow: scroll">
@@ -72,16 +85,17 @@
                     @can('add_'.$module_name)
 
                     @endcan
-                        <button type="button" style="margin: 10px" class="btn btn-primary ss" data-toggle="modal" data-target="#myModal">
-                            Setting Prefix
-                        </button>
-                        <button type="button" style="margin: 10px" class="btn btn-warning ss" data-toggle="modal" data-target="#myModal1">
-                            Setting Suffix
-                        </button>
+                    <button type="button" style="margin: 10px" class="btn btn-primary ss" data-toggle="modal" data-target="#myModal">
+                        Setting Prefix
+                    </button>
+                    <button type="button" style="margin: 10px" class="btn btn-warning ss" data-toggle="modal" data-target="#myModal1">
+                        Setting Suffix
+                    </button>
 
-                        <button type="button" style="margin: 10px" class="btn btn-info ss" onclick="scraping()">
-                            Auto Scheduling
-                        </button>
+                    <button type="button" style="margin: 10px" class="btn btn-info ss" onclick="scraping()">
+                        <img src="{{asset('/svg-loaders/svg-loaders/bars.svg')}}" width="20" alt=""> Scheduling <img src="/svg-loaders/svg-loaders/spinning-circles.svg" width="20" alt="">
+                    </button>
+
                     @can('restore_'.$module_name)
 
                     @endcan
@@ -205,39 +219,121 @@
             </div>
         </div>
     </div>
+
+
+    <div class="modal" id="myModal_edit_building">
+        <div class="modal-dialog" id="edit_building">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">EDIT INFORMATION</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="bo">ZpID</label>
+                            <input type="text" class="form-control" id="zpId" value="">
+                            <input type="text" class="form-control" id="real_id" value="" hidden>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">HomeId</label>
+                            <input type="text" class="form-control" id="homeId" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Address</label>
+                            <input type="text" class="form-control" id="address" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Address Street</label>
+                            <input type="text" class="form-control" id="address_street" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Address City</label>
+                            <input type="text" class="form-control" id="address_city" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Address State</label>
+                            <input type="text" class="form-control" id="address_state" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Address Zipcode</label>
+                            <input type="text" class="form-control" id="address_zipcode" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">StatusType</label>
+                            <input type="text" class="form-control" id="statustype" value="" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">StatusText</label>
+                            <select type="text" class="form-control" id="statustext" value="">
+                                <option value="Active">Active</option>
+                                <option value="Sold">Sold</option>
+                                <option value="ForRent">For Rent</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Beds</label>
+                            <input type="text" class="form-control" id="beds" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Baths</label>
+                            <input type="text" class="form-control" id="baths" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Area</label>
+                            <input type="text" class="form-control" id="area" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Price</label>
+                            <input type="number" class="form-control" id="price" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Country Currency</label>
+                            <input type="text" class="form-control" id="currency" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Detail URL</label>
+                            <input type="text" class="form-control" id="detailUrl" value="">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="bo">Impage URL</label>
+                            <input type="text" class="form-control" id="imageUrl" value="">
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" onclick="buildingStore()" id="success" data-dismiss="modal">EDIT</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
     <!-- gallary-->
     <div class="modal fade" id="largeModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="gallary">
+                <div class="modal-header mo">
+                    <h4 class="modal-title">Images</h4>
+                </div>
+
                 <div class="modal-body" id="gallary1">
                     <!-- carousel -->
-                    <div id='carouselExampleIndicators' class='carousel slide' data-ride='carousel'>
-                        <ol class='carousel-indicators' id="build_next">
-
-                        </ol>
-                        <div class='carousel-inner' id="build_slider_images">
+                    <div>
+                        <div class='row' id="build_slider_images">
 
                         </div>
-                        <a class='carousel-control-prev' href='#carouselExampleIndicators' role='button' data-slide='prev'>
-                      <span class='carousel-control-prev-icon' aria-hidden='true'></span>
-                    <span class='sr-only'>Previous</span>
-                </a>
-                <a
-                    class='carousel-control-next'
-                    href='#carouselExampleIndicators'
-                    role='button'
-                    data-slide='next'
-                >
-              <span
-                  class='carousel-control-next-icon'
-                  aria-hidden='true'
-              ></span>
-                            <span class='sr-only'>Next</span>
-                        </a>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <div class="modal-footer mo">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -338,7 +434,7 @@
                     }
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
-
+                    newNotification('Something Error', 3);
                 }
             });
         }
@@ -348,44 +444,82 @@
                 type: 'get',
                 data: {ID: ID},
                 success: function (data, status, xhr) {
-                    var html_build_next = '';
                     var html_build_image = '';
-                    $('#build_next').empty();
-                    $('#html_build_image').empty();
+                    $('#build_slider_images').empty();
                     data.map((item, index) => {
-                        if(index == 0) {
-                            html_build_next = html_build_next + '<li data-target="#carouselExampleIndicators" data-slide-to="'+ index +'" class="active"></li>';
-                            html_build_image = html_build_image + '<div class="carousel-item active"><img class="img-size" src="'+ item.image_path +'"></div>';
-                        }else {
-                            html_build_next = html_build_next + '<li data-target="#carouselExampleIndicators" data-slide-to="'+ index +'"></li>';
-                            html_build_image = html_build_image + '<div class="carousel-item"><img class="img-size" src="'+ item.image_path +'"></div>';
-                        }
+                        html_build_image = html_build_image + '<div class="col-md-4" style="padding:0px"><img class="img-size" src="'+ item.image_path +'"></div>';
                     })
-                    $('#build_next').append(html_build_next);
                     $('#build_slider_images').append(html_build_image);
                 },
                 error: function (jqXhr, textStatus, errorMessage) {
+                    newNotification('Something Error', 3);
+                }
+            });
+        }
 
+        function buildingEdit(ID) {
+            $.ajax('{{ route("backend.$module_name.buildingEdit") }}', {
+                type: 'get',
+                data: {ID: ID},
+                success: function (data, status, xhr) {
+                    $('#real_id').val(ID);
+                    $('#homeId').val(data[0].home_id);
+                    $('#zpId').val(data[0].zpid);
+                    $('#address').val(data[0].address);
+                    $('#address_city').val(data[0].addressCity);
+                    $('#address_street').val(data[0].addressStreet);
+                    $('#address_state').val(data[0].addressState);
+                    $('#address_zipcode').val(data[0].addressZopcode);
+                    $('#statustext').val(data[0].statusText);
+                    $('#statustype').val(data[0].statusType);
+                    $('#baths').val(data[0].baths);
+                    $('#beds').val(data[0].beds);
+                    $('#area').val(data[0].area);
+                    $('#price').val(data[0].unformattedPrice);
+                    $('#currency').val(data[0].countryCurrency);
+                    $('#detailUrl').val(data[0].detail_url);
+                    $('#imageUrl').val(data[0].imageSrc);
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    newNotification('Something Error', 3);
+                }
+            });
+        }
+        function buildingStore() {
+            $.ajax('{{ route("backend.$module_name.buildingStore") }}', {
+                type: 'get',
+                data: {id: $('#real_id').val(), home_id: $('#homeId').val(), zpid: $('#zpId').val(), address: $('#address').val(), addressCity: $('#address_city').val(), addressStreet: $('#address_street').val(), addressState: $('#address_state').val(),
+                    addressZopcode: $('#address_zipcode').val(), statusText: $('#statustext').val(), statusType: $('#statustype').val(), baths: $('#baths').val(), beds: $('#beds').val(), area: $('#area').val(), unformattedPrice: $('#price').val(), countryCurrency: $('#currency').val(), detail_url: $('#detailUrl').val(), imageSrc: $('#imageUrl').val()},
+                success: function (data, status, xhr) {
+                    newNotification('Data is changed! ', 1);
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 3000)
+
+                },
+                error: function (jqXhr, textStatus, errorMessage) {
+                    newNotification('Something Error', 3);
                 }
             });
         }
         function scraping() {
-            $.ajax('{{ route("backend.$module_name.scraping") }}', {
-                type: 'get',
-                data: {status: 1},
-                success: function (data, status, xhr) {
-                    if(data == 'save_success'){
-                        newNotification('Save Prefix Words', 1);
-                        window.location.reload();
-                    }else {
-                        newNotification('Change Prefix Words', 1);
-                        window.location.reload();
-                    }
-                },
-                error: function (jqXhr, textStatus, errorMessage) {
-
-                }
-            });
+            newNotification('Now Running Scheduling...', 1);
+            {{--$.ajax('{{ route("backend.$module_name.scraping") }}', {--}}
+            {{--    type: 'get',--}}
+            {{--    data: {status: 1},--}}
+            {{--    success: function (data, status, xhr) {--}}
+            {{--        if(data == 'save_success'){--}}
+            {{--            newNotification('Save Prefix Words', 1);--}}
+            {{--            window.location.reload();--}}
+            {{--        }else {--}}
+            {{--            newNotification('Change Prefix Words', 1);--}}
+            {{--            window.location.reload();--}}
+            {{--        }--}}
+            {{--    },--}}
+            {{--    error: function (jqXhr, textStatus, errorMessage) {--}}
+            {{--        newNotification('Something Error', 3);--}}
+            {{--    }--}}
+            {{--});--}}
         }
     </script>
 @endpush

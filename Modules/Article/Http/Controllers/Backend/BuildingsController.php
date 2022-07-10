@@ -90,17 +90,36 @@ class BuildingsController extends Controller
 
             $get_city_id = DB::table('categories')->where('name', $param)->first();
             if(DB::table('home_infos')->where('city_id', $get_city_id->id)->exists()) {
-                $data = DB::table('home_infos')->select('id', 'zpid', 'home_id', 'statusType', 'statusText', 'price', 'address', 'imageSrc','beds', 'baths', 'area')->where('city_id', $get_city_id->id)->get();
+                $data = DB::table('home_infos')->select('id', 'zpid', 'home_id', 'statusType', 'statusText', 'price', 'address', 'imageSrc','beds', 'baths', 'area', 'city_id')->where('city_id', $get_city_id->id)->get();
 
                 return DataTables::of($data)
                     ->addColumn('action', function ($data) {
                         $module_name = $this->module_name;
-                        return ('<button class="btn btn-primary" style="padding: 9px;margin-right: 10px" onclick="buildingEdit('.$data->id.')"><i class="fa fa-edit"></i></button><button class="btn btn-success " onclick="getImage('. $data->id .')" data-toggle="modal" data-target="#largeModal" style="padding: 9px;padding-left: 11px;padding-right: 11px;"><i class="fa fa-play"></i></button>');
+                        if($data->city_id == 3)
+                            return ('<button class="btn btn-primary" style="padding: 9px;margin-right: 10px" onclick="buildingEdit('.$data->id.')" data-toggle="modal" data-target="#myModal_edit_building"><i class="fa fa-edit"></i></button><button class="btn btn-success " onclick="getImage('. $data->id .')" data-toggle="modal" data-target="#largeModal" style="padding: 9px;padding-left: 11px;padding-right: 11px;"><i class="fa fa-play"></i></button>');
+                        else
+                            return ('<button class="btn btn-primary" style="padding: 9px;" onclick="buildingEdit('.$data->id.')" data-toggle="modal" data-target="#myModal_edit_building"><i class="fa fa-edit"></i></button>');
                     })
                     ->editColumn('imageSrc', function ($info) {
                         return '<img src="' .$info->imageSrc.'" width="100px"/>';
                     })
-                    ->rawColumns(['imageSrc', 'action'])
+                    ->editColumn('statusText', function ($info) {
+                        if($info->statusText == 'Active')
+                            return '<p style="background-color: rgb(255, 90, 80);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusText .'</p>';
+                        else if($info->statusText == 'Sold')
+                            return '<p style="background-color: rgb(255, 210, 55);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusText .'</p>';
+                        else
+                            return '<p style="background-color: rgb(152, 93, 255);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusText .'</p>';
+                    })
+                    ->editColumn('statusType', function ($info) {
+                        if($info->statusType == 'FOR_SALE')
+                            return '<p style="background-color: rgb(255, 90, 80);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusType .'</p>';
+                        else if($info->statusType == 'SOLD')
+                            return '<p style="background-color: rgb(255, 210, 55);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusType .'</p>';
+                        else
+                            return '<p style="background-color: rgb(152, 93, 255);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusType .'</p>';
+                    })
+                    ->rawColumns(['imageSrc', 'action', 'statusType', 'statusText'])
                     ->make(true);
             }else {
                 return DataTables::of([])->make(true);
@@ -111,16 +130,72 @@ class BuildingsController extends Controller
             return DataTables::of($data)
                 ->addColumn('action', function ($data) {
                     $module_name = $this->module_name;
-                    return ('<button class="btn btn-primary" style="padding: 9px;"><i class="fa fa-edit"></i></button>');
+                    return ('<button class="btn btn-primary" style="padding: 9px;" onclick="buildingEdit('.$data->id.')" data-toggle="modal" data-target="#myModal_edit_building"><i class="fa fa-edit"></i></button>');
                 })
                 ->editColumn('imageSrc', function ($info) {
                     return '<img src="' .$info->imageSrc.'" width="100px"/>';
                 })
-                ->rawColumns(['imageSrc', 'action'])
+                ->editColumn('statusText', function ($info) {
+                    if($info->statusText == 'Active')
+                        return '<p style="background-color: rgb(255, 90, 80);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusText .'</p>';
+                    else if($info->statusText == 'Sold')
+                        return '<p style="background-color: rgb(255, 210, 55);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusText .'</p>';
+                    else
+                        return '<p style="background-color: rgb(152, 93, 255);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusText .'</p>';
+                })
+                ->editColumn('statusType', function ($info) {
+                    if($info->statusType == 'FOR_SALE')
+                        return '<p style="background-color: rgb(255, 90, 80);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusType .'</p>';
+                    else if($info->statusType == 'SOLD')
+                        return '<p style="background-color: rgb(255, 210, 55);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusType .'</p>';
+                    else
+                        return '<p style="background-color: rgb(152, 93, 255);padding:2px;border-radius: 30px;text-align: center;font-weight: bold;color: white">'. $info->statusType .'</p>';
+                })
+                ->rawColumns(['imageSrc', 'action', 'statusType', 'statusText'])
                 ->make(true);
         }
 
     }
+    public function buildingEdit(Request $request) {
+        $id = $request->get('ID');
+        $data = DB::table('home_infos')->where('id', $id)->get();
+        return response()->json($data);
+    }
+    public function buildingStore(Request $request) {
+        $id = $request->get('id');
+        $home_id = $request->get('home_id');
+        $zpid = $request->get('zpid');
+        $address = $request->get('address');
+        $addressCity = $request->get('addressCity');
+        $addressStreet = $request->get('addressStreet');
+        $addressState = $request->get('addressState');
+        $addressZopcode = $request->get('addressZopcode');
+        $statusText = $request->get('statusText');
+        $baths = $request->get('baths');
+        $beds = $request->get('beds');
+        $area = $request->get('area');
+        $unformattedPrice = $request->get('unformattedPrice');
+        $countryCurrency = $request->get('countryCurrency');
+        $detail_url = $request->get('detail_url');
+        $imageSrc = $request->get('imageSrc');
+        $statusType = '';
+        $price = $countryCurrency .number_format($unformattedPrice);
+        if($statusText == 'Active') {
+            $statusType = 'FOR_SALE';
+        }else if($statusText == 'Sold') {
+            $statusType = 'SOLD';
+        }else if($statusText == 'ForRent') {
+            $statusType = 'For Rent';
+            $price = $price . '/mo';
+        }
+
+        DB::table('home_infos')->where('id', $id)->update(['home_id' => $home_id, 'zpid' => $zpid, 'address' => $address, 'addressCity' => $addressCity,
+            'addressStreet' => $addressStreet, 'addressState' => $addressState, 'addressZopcode' => $addressZopcode, 'statusText' => $statusText, 'baths' => $baths,
+            'beds' => $beds, 'area' => $area, 'unformattedPrice' => $unformattedPrice, 'countryCurrency' => $countryCurrency, 'detail_url' => $detail_url, 'imageSrc' => $imageSrc,
+            'statusType' => $statusType, 'price' => $price]);
+        return 'success';
+    }
+
     public function getImage(Request $request) {
         $id = $request->get('ID');
 

@@ -79,7 +79,8 @@ Route::group(['namespace' => '\Modules\Article\Http\Controllers\Backend', 'as' =
 
     $module_name = 'buildings';
     $controller_name = 'BuildingsController';
-
+    Route::get("$module_name/buildingStore", ['as' => "$module_name.buildingStore", 'uses' => "$controller_name@buildingStore"]);
+    Route::get("$module_name/buildingEdit", ['as' => "$module_name.buildingEdit", 'uses' => "$controller_name@buildingEdit"]);
     Route::post("$module_name/settings", ['as' => "$module_name.settings", 'uses' => "$controller_name@settings"]);
     Route::get("$module_name/getImage", ['as' => "$module_name.getImage", 'uses' => "$controller_name@getImage"]);
     Route::get("$module_name/scraping", ['as' => "$module_name.scraping", 'uses' => "$controller_name@scraping"]);
